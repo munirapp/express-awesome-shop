@@ -1,0 +1,22 @@
+{
+  "name": "express-awesome-shop",
+  "version": "1.0.0",
+  "description": "REST API Marketplace Shop made with Express.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/munirapp/express-boilerplate.git"
+  },
+  "keywords": [
+    "express"
+  ],
+  "author": "Munir AP",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/munirapp/express-boilerplate/issues"
+  },
+  "homepage": "https://github.com/munirapp/express-boilerplate#readme"
+}
