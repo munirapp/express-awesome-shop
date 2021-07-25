@@ -1,16 +1,17 @@
 const fs = require("fs");
 const path = require("path");
-const container = require("../../src/providers/container");
-const mockDir = path.join(__dirname + "/mocks");
+const container = require("../../../src/providers/container");
+const mockDir = path.join(__dirname + "/mocks/modules");
+const express = require("express");
+const request = require("supertest");
 
 describe("Testing all functional container", () => {
   beforeAll(() => {
     fs.mkdirSync(mockDir);
-    fs.mkdirSync(`${mockDir}/modules`);
-    fs.mkdirSync(`${mockDir}/modules/v1`);
-    fs.mkdirSync(`${mockDir}/modules/v2`);
-    fs.mkdirSync(`${mockDir}/modules/v1/users`);
-    fs.mkdirSync(`${mockDir}/modules/v2/users`);
+    fs.mkdirSync(`${mockDir}/v1`);
+    fs.mkdirSync(`${mockDir}/v2`);
+    fs.mkdirSync(`${mockDir}/v1/users`);
+    fs.mkdirSync(`${mockDir}/v2/users`);
   });
 
   afterAll(() => {
@@ -40,5 +41,23 @@ describe("Testing all functional container", () => {
     const listStructure = await container.getStructureModule(modulesPath);
 
     expect(listStructure).toEqual(expectedListStructure);
+  });
+
+  describe("Testing all endpoint modules", () => {
+    let listStructure, apiRoutes, app;
+
+    beforeAll(async () => {
+      listStructure = await container.getStructureModule(mockDir);
+      apiRoutes = await container.setRouteModule(listStructure);
+      app = express();
+      app.use("/api", apiRoutes);
+    });
+
+    test("It must result 200 and text hello world when hit endpoint v1/users", () => {
+      return request(app)
+        .get("/", "/api/v1/users")
+        .expect(200)
+        .expect("hello world");
+    });
   });
 });

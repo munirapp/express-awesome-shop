@@ -36,6 +36,29 @@ async function getStructureModule(dir) {
   });
 }
 
+/**
+ *
+ * @param {*} listStructure
+ * @param {*} routes
+ * @returns
+ */
+async function setRouteModule(listStructure, routes = []) {
+  if (listStructure.length && listStructure.length > 0) {
+    listStructure.forEach((item) => {
+      if (item.child) {
+        routes = routes.concat(setRouteModule(item.child, routes));
+      }
+
+      return;
+    });
+
+    return routes;
+  }
+
+  throw new Error("parameters must be an array");
+}
+
 module.exports = {
   getStructureModule,
+  setRouteModule,
 };
