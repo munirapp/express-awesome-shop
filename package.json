@@ -12,7 +12,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "jest --detectOpenHandles --collect-coverage --forceExit"
+    "test": "jest --coverage"
   },
   "keywords": [],
   "author": "",
