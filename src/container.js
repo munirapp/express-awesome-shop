@@ -21,6 +21,7 @@ const recGetArrayTreeModule = (rootDir, arr = []) => {
 
   // Looping directory child
   lsDir.forEach((dir) => {
+    // Check if directory child's type is directory or not
     if (fs.lstatSync(`${rootDir}/${dir}`).isDirectory()) {
       // Check if directory child's name has include in list of allowed http methods
       if (["get", "post", "put", "patch", "delete"].includes(dir)) {
@@ -33,7 +34,7 @@ const recGetArrayTreeModule = (rootDir, arr = []) => {
       else if (dir.includes(":")) {
         arr.push({
           params: dir,
-          endpoint: recGetArrayTreeModule(`${rootDir}/${dir}`),
+          child: recGetArrayTreeModule(`${rootDir}/${dir}`),
         });
       } else {
         arr.push({
