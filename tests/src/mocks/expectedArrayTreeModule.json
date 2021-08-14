@@ -1,0 +1,39 @@
+[
+  {
+    "path": "v1",
+    "child": [
+      {
+        "path": "users",
+        "child": [
+          {
+            "params": ":id",
+            "child": [
+              {
+                "method": "get",
+                "endpoint": ["getOneUser.js"]
+              }
+            ]
+          },
+          {
+            "method": "get",
+            "endpoint": ["getAllUsers.js"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "path": "v2",
+    "child": [
+      {
+        "path": "products",
+        "child": [
+          {
+            "method": "get",
+            "endpoint": ["getAllProducts.js"]
+          }
+        ]
+      }
+    ]
+  }
+]

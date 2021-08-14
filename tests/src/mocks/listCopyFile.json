@@ -1,0 +1,14 @@
+[
+  {
+    "source": "/mocks/getAllUsers.mock.js",
+    "destination": "/v1/users/get/getAllUsers.js"
+  },
+  {
+    "source": "/mocks/getOneUser.mock.js",
+    "destination": "/v1/users/:id/get/getOneUser.js"
+  },
+  {
+    "source": "/mocks/getAllProducts.mock.js",
+    "destination": "/v2/products/get/getAllProducts.js"
+  }
+]

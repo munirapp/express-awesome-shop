@@ -1,0 +1,10 @@
+[
+  "/v1",
+  "/v1/users",
+  "/v1/users/get",
+  "/v1/users/:id",
+  "/v1/users/:id/get",
+  "/v2",
+  "/v2/products",
+  "/v2/products/get"
+]

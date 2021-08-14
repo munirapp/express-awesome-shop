@@ -1,37 +1,26 @@
 const fs = require("fs");
 const container = require("../../src/container");
 const moduleMockDir = __dirname + "/mocks/module";
+const expectedArrayTreeModule = require("./mocks/expectedArrayTreeModule.json");
+const lsMkdir = require("./mocks/listMakeDir.json");
+const lsCopy = require("./mocks/listCopyFile.json");
 
 describe("test container module", () => {
   beforeAll(() => {
     if (!fs.existsSync(moduleMockDir)) fs.mkdirSync(moduleMockDir);
 
-    const lsMkdir = [
-      "/v1",
-      "/v1/users",
-      "/v1/users/get",
-      "/v1/users/get/:id",
-      "/v2",
-      "/v2/products",
-      "/v2/products/get",
-    ];
     lsMkdir.forEach((pathDir) => {
       if (!fs.existsSync(moduleMockDir + pathDir))
         fs.mkdirSync(moduleMockDir + pathDir);
     });
 
-    fs.copyFileSync(
-      __dirname + "/mocks/getAllUsers.mock.js",
-      moduleMockDir + "/v1/users/get/getAllUsers.js"
-    );
-    fs.copyFileSync(
-      __dirname + "/mocks/getOneUser.mock.js",
-      moduleMockDir + "/v1/users/get/:id/getOneUser.js"
-    );
-    fs.copyFileSync(
-      __dirname + "/mocks/getAllProducts.mock.js",
-      moduleMockDir + "/v2/products/get/getAllProducts.js"
-    );
+    lsCopy.forEach((file) => {
+      if (fs.existsSync(__dirname + file.source))
+        fs.copyFileSync(
+          __dirname + file.source,
+          moduleMockDir + file.destination
+        );
+    });
   });
 
   describe("test function recGetArrayTreeModule", () => {
@@ -56,40 +45,6 @@ describe("test container module", () => {
     });
 
     test("function recGetArrayTreeModule should return expected array tree module", () => {
-      const expectedArrayTreeModule = [
-        {
-          path: "v1",
-          child: [
-            {
-              path: "users",
-              child: [
-                {
-                  method: "get",
-                  endpoint: [
-                    { params: ":id", endpoint: ["getOneUser.js"] },
-                    "getAllUsers.js",
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-        {
-          path: "v2",
-          child: [
-            {
-              path: "products",
-              child: [
-                {
-                  method: "get",
-                  endpoint: ["getAllProducts.js"],
-                },
-              ],
-            },
-          ],
-        },
-      ];
-
       const arrayTreeModule = container.recGetArrayTreeModule(
         __dirname + "/mocks/module"
       );
