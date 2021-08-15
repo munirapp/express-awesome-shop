@@ -1,0 +1,17 @@
+[
+  {
+    "route": "/v1/users/:id",
+    "method": "get",
+    "handler": "getOneUser.js"
+  },
+  {
+    "route": "/v1/users",
+    "method": "get",
+    "handler": "getAllUsers.js"
+  },
+  {
+    "route": "/v2/products",
+    "method": "get",
+    "handler": "getAllProducts.js"
+  }
+]

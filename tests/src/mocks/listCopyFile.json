@@ -5,7 +5,7 @@
   },
   {
     "source": "/mocks/getOneUser.mock.js",
-    "destination": "/v1/users/:id/get/getOneUser.js"
+    "destination": "/v1/users/get/:id/getOneUser.js"
   },
   {
     "source": "/mocks/getAllProducts.mock.js",

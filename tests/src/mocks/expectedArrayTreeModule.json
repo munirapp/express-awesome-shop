@@ -6,17 +6,11 @@
         "path": "users",
         "child": [
           {
-            "params": ":id",
-            "child": [
-              {
-                "method": "get",
-                "endpoint": ["getOneUser.js"]
-              }
-            ]
-          },
-          {
             "method": "get",
-            "endpoint": ["getAllUsers.js"]
+            "endpoint": [
+              { "params": ":id", "handler": "getOneUser.js" },
+              { "params": null, "handler": "getAllUsers.js" }
+            ]
           }
         ]
       }
@@ -30,7 +24,7 @@
         "child": [
           {
             "method": "get",
-            "endpoint": ["getAllProducts.js"]
+            "endpoint": [{ "params": null, "handler": "getAllProducts.js" }]
           }
         ]
       }
