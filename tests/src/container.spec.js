@@ -2,6 +2,7 @@ const fs = require("fs");
 const container = require("../../src/container");
 const moduleMockDir = __dirname + "/mocks/module";
 const expectedArrayTreeModule = require("./mocks/expectedArrayTreeModule.json");
+const expectedArrayRoutes = require("./mocks/expectedArrayRoutes.json");
 const lsMkdir = require("./mocks/listMakeDir.json");
 const lsCopy = require("./mocks/listCopyFile.json");
 
@@ -61,6 +62,26 @@ describe("test container module", () => {
 
       if (fs.existsSync(__dirname + "/mocks/example.js"))
         fs.rmSync(__dirname + "/mocks/example.js");
+    });
+  });
+
+  describe("test function recNormalizeRoutes", () => {
+    test("function recNormalizeRoutes should return expected array routes", () => {
+      expect(
+        container.recNormalizeRoutes(expectedArrayTreeModule)
+      ).toMatchObject(expectedArrayRoutes);
+    });
+
+    test("function recNormalizeRoutes should throw error when get wrong array tree format", () => {
+      const wrongArrayTree = JSON.parse(
+        JSON.stringify(expectedArrayTreeModule)
+      );
+
+      wrongArrayTree.push({ endpoint: null });
+
+      expect(() => {
+        container.recNormalizeRoutes(wrongArrayTree);
+      }).toThrow("Wrong array tree format");
     });
   });
 
