@@ -51,20 +51,28 @@ const recGetArrayTreeModule = (rootDir, arr = []) => {
   return arr;
 };
 
+/**
+ * Recursive Normalize Routes
+ * @param {Array} arrTree array of tree module
+ * @param {Array} arrRoute array of normalize route
+ * @param {String} defaultRoute
+ * @param {String} defaultMethod
+ * @returns {Array} arrya of normalize route
+ */
 const recNormalizeRoutes = (
   arrTree,
   arrRoute = [],
-  defaultRoot = "",
+  defaultRoute = "",
   defaultMethod = ""
 ) => {
   arrTree.forEach((item) => {
     if (item.path) {
-      recNormalizeRoutes(item.child, arrRoute, `${defaultRoot}/${item.path}`);
+      recNormalizeRoutes(item.child, arrRoute, `${defaultRoute}/${item.path}`);
     } else if (item.method) {
-      recNormalizeRoutes(item.endpoint, arrRoute, defaultRoot, item.method);
+      recNormalizeRoutes(item.endpoint, arrRoute, defaultRoute, item.method);
     } else if (item.handler) {
       arrRoute.push({
-        route: item.params ? `${defaultRoot}/${item.params}` : defaultRoot,
+        route: item.params ? `${defaultRoute}/${item.params}` : defaultRoute,
         method: defaultMethod,
         handler: item.handler,
       });
