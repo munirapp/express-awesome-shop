@@ -32,9 +32,10 @@ const recGetArrayTreeModule = (rootDir, arr = []) => {
       }
       // Check if directory child's name contains ':' and defined as params
       else if (dir.includes(":")) {
+        const handler = fs.readdirSync(`${rootDir}/${dir}`);
         arr.push({
           params: dir,
-          child: recGetArrayTreeModule(`${rootDir}/${dir}`),
+          handler: handler[0],
         });
       } else {
         arr.push({
@@ -43,11 +44,36 @@ const recGetArrayTreeModule = (rootDir, arr = []) => {
         });
       }
     } else {
-      arr.push(path.basename(`${rootDir}/${dir}`));
+      arr.push({ params: null, handler: path.basename(`${rootDir}/${dir}`) });
     }
   });
 
   return arr;
 };
 
-module.exports = { recGetArrayTreeModule };
+const recNormalizeRoutes = (
+  arrTree,
+  arrRoute = [],
+  defaultRoot = "",
+  defaultMethod = ""
+) => {
+  arrTree.forEach((item) => {
+    if (item.path) {
+      recNormalizeRoutes(item.child, arrRoute, `${defaultRoot}/${item.path}`);
+    } else if (item.method) {
+      recNormalizeRoutes(item.endpoint, arrRoute, defaultRoot, item.method);
+    } else if (item.handler) {
+      arrRoute.push({
+        route: item.params ? `${defaultRoot}/${item.params}` : defaultRoot,
+        method: defaultMethod,
+        handler: item.handler,
+      });
+    } else {
+      throw new Error("Wrong array tree format");
+    }
+  });
+
+  return arrRoute;
+};
+
+module.exports = { recGetArrayTreeModule, recNormalizeRoutes };
