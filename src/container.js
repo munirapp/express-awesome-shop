@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const { Router } = require("express");
 
 /**
  * Recursive Get Array Tree Module
@@ -84,4 +85,37 @@ const recNormalizeRoutes = (
   return arrRoute;
 };
 
-module.exports = { recGetArrayTreeModule, recNormalizeRoutes };
+module.exports = {
+  recGetArrayTreeModule,
+  recNormalizeRoutes,
+  /**
+   * Load Modules API for express routes
+   * @param {String} moduleDir
+   * @returns {Array} array of express routes
+   */
+  loadModulesApi: function (moduleDir) {
+    const arrayTreeModule = this.recGetArrayTreeModule(moduleDir);
+    const arrayRoutes = this.recNormalizeRoutes(arrayTreeModule);
+
+    const routes = [];
+
+    arrayRoutes.forEach((itemRoute) => {
+      const route = Router();
+
+      const handlers = [];
+
+      const pathService = `${moduleDir}${itemRoute.route}/${itemRoute.method}/${itemRoute.handler}`;
+      const controllerHandler = (req, res) =>
+        require(pathService)()
+          .then((data) => res.json(data))
+          .catch((error) => res.json(error.message));
+      handlers.push(controllerHandler);
+
+      route[itemRoute.method](itemRoute.route, ...handlers);
+
+      routes.push(route);
+    });
+
+    return routes;
+  },
+};
