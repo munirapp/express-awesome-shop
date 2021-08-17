@@ -1,4 +1,7 @@
 const fs = require("fs");
+const request = require("supertest");
+const express = require("express");
+const app = express();
 const container = require("../../src/container");
 const moduleMockDir = __dirname + "/mocks/module";
 const expectedArrayTreeModule = require("./mocks/expectedArrayTreeModule.json");
@@ -46,9 +49,7 @@ describe("test container module", () => {
     });
 
     test("function recGetArrayTreeModule should return expected array tree module", () => {
-      const arrayTreeModule = container.recGetArrayTreeModule(
-        __dirname + "/mocks/module"
-      );
+      const arrayTreeModule = container.recGetArrayTreeModule(moduleMockDir);
 
       expect(arrayTreeModule).toMatchObject(expectedArrayTreeModule);
     });
@@ -82,6 +83,31 @@ describe("test container module", () => {
       expect(() => {
         container.recNormalizeRoutes(wrongArrayTree);
       }).toThrow("Wrong array tree format");
+    });
+  });
+
+  describe("test function loadModulesApi", () => {
+    beforeAll(() => {
+      const apiRoutes = container.loadModulesApi(moduleMockDir);
+      app.use("/api", apiRoutes);
+    });
+
+    it("routes api getAllUsers must have response status 200 and response body same with expected json", async () => {
+      const expectedGetAllUsersResponse = [
+        {
+          id: 1,
+          name: "Alex",
+          gender: "male",
+          address: { name: "St. Petersburg, New York" },
+        },
+      ];
+
+      return request(app)
+        .get("/api/v1/users")
+        .then((response) => {
+          expect(response.status).toBe(200);
+          expect(response.body).toMatchObject(expectedGetAllUsersResponse);
+        });
     });
   });
 
